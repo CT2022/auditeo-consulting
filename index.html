@@ -6,6 +6,8 @@
 <title>Auditeo | Business Registration · Income Tax · GST · Accounting | Ranchi, Jharkhand</title>
 <meta name="description" content="Auditeo — Expert Company Registration, Income Tax, GST, Labour Law, Trademark & Accounting services in Ranchi, Jharkhand & Pan India.">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('QhuwbexcwW82qOAtN');</script>
 <style>
 /* ── RESET & BASE ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1612,11 +1614,11 @@ nav{
       <div>
         <form class="cb-form" onsubmit="cbSubmit(event)">
           <div class="cb-row">
-            <input class="cb-input" type="text" placeholder="Your Full Name *" required>
-            <input class="cb-input" type="tel" placeholder="+91 Phone Number *" required>
+            <input class="cb-input" type="text" name="name" placeholder="Your Full Name *" required>
+            <input class="cb-input" type="tel" name="phone" placeholder="+91 Phone Number *" required>
           </div>
-          <input class="cb-input" type="email" placeholder="Email Address">
-          <select class="cb-input">
+          <input class="cb-input" type="email" name="email" placeholder="Email Address">
+          <select class="cb-input" name="service">
             <option value="" disabled selected>Select Service Required *</option>
             <optgroup label="Company Registration"><option>Private Limited Company</option><option>LLP / OPC / Partnership</option><option>Section 8 / NGO</option></optgroup>
             <optgroup label="Income Tax"><option>PAN / TAN Application</option><option>ITR Filing (1–7)</option><option>TDS Returns</option><option>Tax Audit (44AB)</option><option>Tax Notice Reply</option></optgroup>
@@ -1881,16 +1883,16 @@ nav{
           <p>Fill the form below and we'll respond within 24 business hours.</p>
           <form onsubmit="cfS(event)">
             <div class="cf-row">
-              <div class="cf-g"><label>Full Name *</label><input type="text" placeholder="Your name" required></div>
-              <div class="cf-g"><label>Organisation</label><input type="text" placeholder="Business name"></div>
+              <div class="cf-g"><label>Full Name *</label><input type="text" name="name" placeholder="Your name" required></div>
+              <div class="cf-g"><label>Organisation</label><input type="text" name="org" placeholder="Business name"></div>
             </div>
             <div class="cf-row">
-              <div class="cf-g"><label>Email *</label><input type="email" placeholder="you@email.com" required></div>
-              <div class="cf-g"><label>Phone</label><input type="tel" placeholder="+91 99313 66842"></div>
+              <div class="cf-g"><label>Email *</label><input type="email" name="email" placeholder="you@email.com" required></div>
+              <div class="cf-g"><label>Phone</label><input type="tel" name="phone" placeholder="+91 99313 66842"></div>
             </div>
             <div class="cf-row full">
               <div class="cf-g"><label>Service Required *</label>
-                <select required>
+                <select name="service" required>
                   <option value="" disabled selected>Select...</option>
                   <optgroup label="Company Registration"><option>Private Limited Company</option><option>LLP / OPC / Partnership</option><option>Section 8 / NGO</option></optgroup>
                   <optgroup label="Income Tax"><option>PAN / TAN Application</option><option>ITR Filing (1–7)</option><option>Tax Notice Reply</option><option>Tax Audit (44AB)</option><option>TDS Return Filing</option><option>Capital Gains Tax</option></optgroup>
@@ -1903,7 +1905,7 @@ nav{
               </div>
             </div>
             <div class="cf-row full">
-              <div class="cf-g"><label>Message</label><textarea placeholder="Describe your requirement, location, business type..."></textarea></div>
+              <div class="cf-g"><label>Message</label><textarea name="message" placeholder="Describe your requirement, location, business type..."></textarea></div>
             </div>
             <button type="submit" class="cf-submit">Send Message →</button>
             <div id="cf-ok">✓ Message sent! We'll be in touch within 24 hours.</div>
@@ -2047,18 +2049,69 @@ const so=new IntersectionObserver(e=>{
 const sb=document.querySelector('.stats-bar');if(sb)so.observe(sb);
 
 // ── FORMS ──
-function cbSubmit(e){
-  e.preventDefault();const b=e.target.querySelector('.cb-submit');
-  b.textContent='Submitting...';b.disabled=true;
-  setTimeout(()=>{b.style.display='none';document.getElementById('cb-ok').style.display='block';},1000);
-}
-function cfS(e){
-  e.preventDefault();const b=e.target.querySelector('.cf-submit');
-  b.textContent='Sending...';b.disabled=true;
-  setTimeout(()=>{b.style.display='none';document.getElementById('cf-ok').style.display='block';},1000);
-}
-</script>
+const EJS_SERVICE  = 'service_8clppfg';
+const EJS_TEMPLATE = 'template_levf1c7';
+const EJS_TEMPLATE_CF = 'template_x7egnf4';
 
+function cbSubmit(e){
+  e.preventDefault();
+  const f = e.target;
+  const b = f.querySelector('.cb-submit');
+  b.textContent = 'Submitting...';
+  b.disabled = true;
+
+  const params = {
+    name:    f.name.value,
+    phone:   f.phone.value,
+    email:   f.email.value,
+    service: f.service.value,
+    org:     'N/A',
+    message: 'Callback Request'
+  };
+
+  emailjs.send(EJS_SERVICE, EJS_TEMPLATE, params)
+    .then(() => {
+      b.style.display = 'none';
+      document.getElementById('cb-ok').style.display = 'block';
+      f.reset();
+    })
+    .catch((err) => {
+      b.textContent = 'Submit Now →';
+      b.disabled = false;
+      alert('Sorry, something went wrong. Please call us directly on +91 99313 66842');
+      console.error('EmailJS error:', err);
+    });
+}
+
+function cfS(e){
+  e.preventDefault();
+  const f = e.target;
+  const b = f.querySelector('.cf-submit');
+  b.textContent = 'Sending...';
+  b.disabled = true;
+
+  const params = {
+    name:    f.name.value,
+    org:     f.org.value,
+    email:   f.email.value,
+    phone:   f.phone.value,
+    service: f.service.value,
+    message: f.message.value
+  };
+
+  emailjs.send(EJS_SERVICE, EJS_TEMPLATE_CF, params)
+    .then(() => {
+      b.style.display = 'none';
+      document.getElementById('cf-ok').style.display = 'block';
+      f.reset();
+    })
+    .catch((err) => {
+      b.textContent = 'Send Message →';
+      b.disabled = false;
+      alert('Sorry, something went wrong. Please call us directly on +91 99313 66842');
+      console.error('EmailJS error:', err);
+    });
+}
 </script>
 
 </body>
